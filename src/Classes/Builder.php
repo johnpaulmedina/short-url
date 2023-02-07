@@ -238,7 +238,7 @@ class Builder
                         ->middleware($this->middleware())
                         ->group(function (): void {
                             Route::get(
-                                '/'.$this->prefix().'/{shortURLKey}',
+                                '/s/{shortURLKey}',
                                 ShortUrlController::class
                             )->name('short-url.invoke');
                         });

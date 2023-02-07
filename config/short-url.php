@@ -60,12 +60,28 @@ return [
     |
     | Here you can override the default application base URL used to generate
     | the default short URL (default_short_url). To use your application's
-    | "app.url" config value, set this field to null.
+    | "app.url" config value, set this field to null. When using the default_url
+    | your application short links will be limited to this domain scope. This
+    | works best when setting the prefix to null. 
+    |
+    | eg: bitly.com/pages/longtail-url will become bit.ly/xxxx
     |
     */
-    'default_url' => null,
+    'default_url'          => null,
 
-    'domains' => [],
+    /*
+    |--------------------------------------------------------------------------
+    | Domains
+    |--------------------------------------------------------------------------
+    |
+    | Here you can add additional domains that you would like your short links
+    | to respond from as well. Any additional domains will always be prefixed
+    | with /s/ before the shortend url.
+    |
+    | eg: https://additionaldomain.com/s/xxxxxxx
+    |
+    */
+    'domains'              => [],
 
     /*
     |--------------------------------------------------------------------------
