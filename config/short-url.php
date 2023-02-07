@@ -81,7 +81,9 @@ return [
     | eg: https://additionaldomain.com/s/xxxxxxx
     |
     */
-    'domains'              => [],
+    'domains' => [
+        //
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +98,7 @@ return [
     | eg: https://yoursite.com/short/xxx?a=b => https://destination.com/page?a=b
     |
     */
-    'forward_query_params' => false,
+    'forward_query_params' => true,
 
     /*
     |--------------------------------------------------------------------------
