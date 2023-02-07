@@ -43,9 +43,6 @@
   },
   "extra": {
     "laravel": {
-      "providers": [
-        // "JohnPaulMedina\\ShortUrl\\Providers\\ShortUrlProvider"
-      ],
       "aliases": {
         "ShortUrl": "JohnPaulMedina\\ShortUrl\\Facades\\ShortUrl"
       }
