@@ -47,7 +47,7 @@
         "JohnPaulMedina\\ShortUrl\\Providers\\ShortUrlProvider"
       ],
       "aliases": {
-        "ShortURL": "JohnPaulMedina\\ShortUrl\\Facades\\ShortUrl"
+        "ShortUrl": "JohnPaulMedina\\ShortUrl\\Facades\\ShortUrl"
       }
     }
   },

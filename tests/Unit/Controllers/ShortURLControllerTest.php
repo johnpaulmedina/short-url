@@ -2,7 +2,7 @@
 
 namespace JohnPaulMedina\ShortUrl\Tests\Unit\Controllers;
 
-use JohnPaulMedina\ShortUrl\Events\ShortURLVisited;
+use JohnPaulMedina\ShortUrl\Events\ShortUrlVisited;
 use JohnPaulMedina\ShortUrl\Models\ShortUrl;
 use JohnPaulMedina\ShortUrl\Models\ShortURLVisit;
 use JohnPaulMedina\ShortUrl\Tests\Unit\TestCase;
@@ -64,7 +64,7 @@ class ShortURLControllerTest extends TestCase
         // Get the visit that was just logged.
         $visit = ShortURLVisit::first();
 
-        Event::assertDispatched(ShortURLVisited::class, function (ShortURLVisited $event) use ($shortURL, $visit) {
+        Event::assertDispatched(ShortUrlVisited::class, function (ShortUrlVisited $event) use ($shortURL, $visit) {
             if ($shortURL->toArray() != $event->shortURL->fresh()->toArray()) {
                 return false;
             }

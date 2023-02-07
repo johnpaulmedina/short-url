@@ -3,12 +3,12 @@
 namespace JohnPaulMedina\ShortUrl\Events;
 
 use JohnPaulMedina\ShortUrl\Models\ShortUrl;
-use JohnPaulMedina\ShortUrl\Models\ShortURLVisit;
+use JohnPaulMedina\ShortUrl\Models\ShortUrlVisit;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ShortURLVisited
+class ShortUrlVisited
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -22,7 +22,7 @@ class ShortURLVisited
     /**
      * Details of the visitor that visited the short URL.
      *
-     * @var ShortURLVisit
+     * @var ShortUrlVisit
      */
     public $shortURLVisit;
 
@@ -32,7 +32,7 @@ class ShortURLVisited
      * @param  ShortUrl  $shortURL
      * @param  ShortURLVisit  $shortURLVisit
      */
-    public function __construct(ShortUrl $shortURL, ShortURLVisit $shortURLVisit)
+    public function __construct(ShortUrl $shortURL, ShortUrlVisit $shortURLVisit)
     {
         $this->shortURL = $shortURL;
         $this->shortURLVisit = $shortURLVisit;

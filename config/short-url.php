@@ -11,7 +11,7 @@ return [
     | is registered for the short URL route.
     |
     */
-    'prefix' => '/short',
+    'prefix' => '/s',
 
     /*
     |--------------------------------------------------------------------------
@@ -35,7 +35,7 @@ return [
     */
     'factories' => [
         \JohnPaulMedina\ShortUrl\Models\ShortUrl::class => \JohnPaulMedina\ShortUrl\Models\Factories\ShortUrlFactory::class,
-        \JohnPaulMedina\ShortUrl\Models\ShortURLVisit::class => \JohnPaulMedina\ShortUrl\Models\Factories\ShortUrlVisitFactory::class,
+        \JohnPaulMedina\ShortUrl\Models\ShortUrlVisit::class => \JohnPaulMedina\ShortUrl\Models\Factories\ShortUrlVisitFactory::class,
     ],
 
     /*
@@ -48,7 +48,7 @@ return [
     | This allows you to define your own route that points to
     | the controller at:
     |
-    | AshAllenDesign\ShortUrl\Controllers\ShortUrlController
+    | JohnPaulMedina\ShortUrl\Controllers\ShortUrlController
     |
     */
     'disable_default_route' => false,
@@ -123,7 +123,7 @@ return [
     | generated keys are unique.
     |
     */
-    'key_salt'              => 'AshAllenDesign\ShortURL',
+    'key_salt'              => 'JohnPaulMedina\ShortUrl',
 
     /*
     |--------------------------------------------------------------------------

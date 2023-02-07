@@ -2,7 +2,7 @@
 
 namespace JohnPaulMedina\ShortUrl\Classes;
 
-use JohnPaulMedina\ShortUrl\Events\ShortURLVisited;
+use JohnPaulMedina\ShortUrl\Events\ShortUrlVisited;
 use JohnPaulMedina\ShortUrl\Exceptions\ValidationException;
 use JohnPaulMedina\ShortUrl\Models\ShortUrl;
 use JohnPaulMedina\ShortUrl\Models\ShortURLVisit;
@@ -61,7 +61,7 @@ class Resolver
 
         $visit = $this->recordVisit($request, $shortURL);
 
-        Event::dispatch(new ShortURLVisited($shortURL, $visit));
+        Event::dispatch(new ShortUrlVisited($shortURL, $visit));
 
         return true;
     }

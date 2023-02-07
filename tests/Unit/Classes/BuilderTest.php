@@ -267,7 +267,7 @@ class BuilderTest extends TestCase
     {
         ShortUrl::create([
             'default_short_url' => 'https://short.com/urlkey123',
-            'destination_url'   => 'https://destination.com/ashallendesign',
+            'destination_url'   => 'https://destination.com/original_url',
             'url_key'           => 'urlkey123',
             'single_use'        => false,
             'track_visits'      => false,
