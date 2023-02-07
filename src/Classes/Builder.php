@@ -233,7 +233,7 @@ class Builder
         
         if(is_array($domains) && count($domains)) {
             foreach($domains as $domain) {
-                Route::fallback(function () use ($domain) {
+                // Route::fallback(function () use ($domain) {
                     Route::domain($domain)
                         ->middleware($this->middleware())
                         ->group(function (): void {
@@ -242,7 +242,7 @@ class Builder
                                 ShortUrlController::class
                             )->name('short-url.invoke');
                         });
-                });
+                // });
             }
         }
     }
