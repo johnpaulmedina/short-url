@@ -8,10 +8,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | This configuration value is used to determine the prefix that
-    | is registered for the short URL route.
+    | is registered for the short URL route. If you are using one domain
+    | it may be best to set the prefix to something like /s to avoid conflict.
     |
     */
-    'prefix' => '/s',
+    'prefix' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -75,10 +76,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you can add additional domains that you would like your short links
-    | to respond from as well. Any additional domains will always be prefixed
-    | with /s/ before the shortend url.
-    |
-    | eg: https://additionaldomain.com/s/xxxxxxx
+    | to respond from as well. Useful if you set your default_url but want to
+    | respond from multiple domains.
     |
     */
     'domains' => [
