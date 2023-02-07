@@ -65,6 +65,8 @@ return [
     */
     'default_url' => null,
 
+    'domains' => [],
+
     /*
     |--------------------------------------------------------------------------
     | Forwards query parameters

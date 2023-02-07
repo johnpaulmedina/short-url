@@ -228,6 +228,21 @@ class Builder
                     ShortUrlController::class
                 )->name('short-url.invoke');
             });
+
+        $domains = config('short-url.domains') ?? [];
+        
+        if(is_array($domain) && count($domains)) {
+            foreach($domains as $domain) {
+                Route::domain($domain)
+                    ->middleware($this->middleware())
+                    ->group(function (): void {
+                        Route::get(
+                            '/'.$this->prefix().'/{shortURLKey}',
+                            ShortUrlController::class
+                        )->name('short-url.invoke');
+                    });
+            }
+        }
     }
 
     /**
