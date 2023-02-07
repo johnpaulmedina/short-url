@@ -231,7 +231,7 @@ class Builder
 
         $domains = config('short-url.domains') ?? [];
         
-        if(is_array($domain) && count($domains)) {
+        if(is_array($domains) && count($domains)) {
             foreach($domains as $domain) {
                 Route::domain($domain)
                     ->middleware($this->middleware())
