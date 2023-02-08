@@ -43,8 +43,10 @@ class BuildShortUrl extends Command
         $this->table(
             ['Destination', 'Short Url'],
             [
-                'destination' => $shortURL->destination, 
-                'default_short_url' => $shortURL->default_short_url
+                [
+                    'destination' => $shortURL->destination, 
+                    'default_short_url' => $shortURL->default_short_url
+                ]
             ]
         );
     }
