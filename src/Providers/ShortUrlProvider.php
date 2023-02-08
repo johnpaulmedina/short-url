@@ -56,7 +56,7 @@ class ShortUrlProvider extends ServiceProvider
 
     public function getConsoleCommands() {
         return [
-            \JohnPaulMedina\Console\Commands\BuildShortUrl::class
+            \JohnPaulMedina\ShortUrl\Console\Commands\Commands::class
         ];
     }
 }
