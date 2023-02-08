@@ -125,7 +125,7 @@ class BuildShortUrl extends Command
             ['ShortUrl', 'Destination', 'Single Use', 'Fwd Query Params', 'Track Visits', 'Redirect Code'],
             [
                 [
-                    'destination' => $shortURL->default_short_url, 
+                    'destination' => urldecode($shortURL->default_short_url), 
                     'default_short_url' => $shortURL->destination_url,
                     'single_use' => boolval($shortURL->single_use),
                     'forward_query_params' => boolval($shortURL->forward_query_params),
