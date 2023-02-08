@@ -161,14 +161,19 @@ class BuildShortUrl extends Command
 
                 $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($socialUtm);
 
+                $socialBuilder  = new \JohnPaulMedina\ShortUrl\Classes\Builder();
+                $socialObject   = $socialBuilder->destinationUrl($url)->make();
+
                 $socialUrls[] = [
-                        'short_url' => $url
+                        'social_media' = $socialMedia,
+                        'short_url' => $socialObject->default_short_url
                 ];    
             }
 
             $this->table(
                 [
-                    'Social Media URL'
+                    'Social Media',
+                    'Url'
                 ],
                 $socialUrls
             );
