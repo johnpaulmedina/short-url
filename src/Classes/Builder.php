@@ -224,9 +224,9 @@ class Builder
             ->middleware($this->middleware())
             ->group(function (): void {
                 Route::get(
-                    '/'.$this->prefix().'/{shortURLKey}',
+                    '/'.$this->prefix().'/{shortURLKey?}',
                     ShortUrlController::class
-                )->name('short-url.invoke');
+                )->where('shortURLKey', '.*')->name('short-url.invoke');
             });
 
         $domains = config('short-url.domains') ?? [];
@@ -238,9 +238,9 @@ class Builder
                         ->middleware($this->middleware())
                         ->group(function (): void {
                             Route::get(
-                                '/'.$this->prefix().'/{shortURLKey}',
+                                '/'.$this->prefix().'/{shortURLKey?}',
                                 ShortUrlController::class
-                            )->name('short-url.invoke');
+                            )->where('shortURLKey', '.*')->name('short-url.invoke');
                         });
                 // });
             }
