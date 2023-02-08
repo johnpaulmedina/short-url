@@ -48,10 +48,10 @@ class BuildShortUrl extends Command
             $utm['utm_id'] = $this->ask('UTM Campaign ID');
 
             $this->info('Use utm_source to identify a search engine, newsletter name, or other source.');
-            $utm['utm_source'] = $this->ask('UTM Source');
+            $utm['utm_source'] = $this->ask('UTM Source', 'social');
 
             $this->info('Use utm_medium to identify a medium such as email or cost-per-click.');
-            $utm['utm_medium'] = $this->ask('UTM Medium');
+            $utm['utm_medium'] = $this->ask('UTM Medium', 'click');
 
             $this->info('Used for keyword analysis. Use utm_campaign to identify a specific product promotion or strategic campaign.');
             $utm['utm_campaign'] = $this->ask('UTM Campaign');
@@ -145,14 +145,14 @@ class BuildShortUrl extends Command
 
             $socialMedias = ['Facebook','Instagram','TikTok','Twitter'];
 
-            foreach ($socialMedias as $socialMedia) {
+            $username = $this->ask('What is the username or handle for this campaign?');
 
-                $username = $this->ask("What is the username or handle for {$socialMedia}?");
+            foreach ($socialMedias as $socialMedia) {
 
                 $socialUtm = [
                     'utm_source' => strtolower($socialMedia),
-                    'utm_campaign' => strtolower($username),
-                    'utm_medium' => 'click',
+                    // 'utm_campaign' => strtolower($username),
+                    // 'utm_medium' => 'click',
                 ];
 
                 $url = $shortURL->default_short_url;
