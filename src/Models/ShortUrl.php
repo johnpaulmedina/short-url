@@ -116,7 +116,7 @@ class ShortUrl extends Model
      */
     public function visits(): HasMany
     {
-        return $this->hasMany(ShortURLVisit::class, 'short_url_id');
+        return $this->hasMany(ShortUrlVisit::class, 'short_url_id');
     }
 
     /**
