@@ -5,7 +5,7 @@ namespace JohnPaulMedina\ShortUrl\Classes;
 use JohnPaulMedina\ShortUrl\Events\ShortUrlVisited;
 use JohnPaulMedina\ShortUrl\Exceptions\ValidationException;
 use JohnPaulMedina\ShortUrl\Models\ShortUrl;
-use JohnPaulMedina\ShortUrl\Models\ShortURLVisit;
+use JohnPaulMedina\ShortUrl\Models\ShortUrlVisit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Jenssegers\Agent\Agent;
@@ -103,11 +103,11 @@ class Resolver
      *
      * @param  Request  $request
      * @param  ShortUrl  $shortURL
-     * @return ShortURLVisit
+     * @return ShortUrlVisit
      */
-    protected function recordVisit(Request $request, ShortUrl $shortURL): ShortURLVisit
+    protected function recordVisit(Request $request, ShortUrl $shortURL): ShortUrlVisit
     {
-        $visit = new ShortURLVisit();
+        $visit = new ShortUrlVisit();
 
         $visit->short_url_id = $shortURL->id;
         $visit->visited_at = now();
@@ -127,10 +127,10 @@ class Resolver
      * as null.
      *
      * @param  ShortUrl  $shortURL
-     * @param  ShortURLVisit  $visit
+     * @param  ShortUrlVisit  $visit
      * @param  Request  $request
      */
-    protected function trackVisit(ShortUrl $shortURL, ShortURLVisit $visit, Request $request): void
+    protected function trackVisit(ShortUrl $shortURL, ShortUrlVisit $visit, Request $request): void
     {
         if ($shortURL->track_ip_address) {
             $visit->ip_address = $request->ip();
@@ -170,19 +170,19 @@ class Resolver
     protected function guessDeviceType(): string
     {
         if ($this->agent->isDesktop()) {
-            return ShortURLVisit::DEVICE_TYPE_DESKTOP;
+            return ShortUrlVisit::DEVICE_TYPE_DESKTOP;
         }
 
         if ($this->agent->isMobile()) {
-            return ShortURLVisit::DEVICE_TYPE_MOBILE;
+            return ShortUrlVisit::DEVICE_TYPE_MOBILE;
         }
 
         if ($this->agent->isTablet()) {
-            return ShortURLVisit::DEVICE_TYPE_TABLET;
+            return ShortUrlVisit::DEVICE_TYPE_TABLET;
         }
 
         if ($this->agent->isRobot()) {
-            return ShortURLVisit::DEVICE_TYPE_ROBOT;
+            return ShortUrlVisit::DEVICE_TYPE_ROBOT;
         }
 
         return '';
