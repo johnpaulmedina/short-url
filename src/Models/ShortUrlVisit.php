@@ -97,7 +97,7 @@ class ShortUrlVisit extends Model
      *
      * @return BelongsTo<ShortUrl, ShortUrlVisit>
      */
-    public function shortURL(): BelongsTo
+    public function shortUrl(): BelongsTo
     {
         return $this->belongsTo(ShortUrl::class, 'short_url_id');
     }

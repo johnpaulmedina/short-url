@@ -2,7 +2,7 @@
 
 namespace JohnPaulMedina\ShortUrl\Models\Factories;
 
-use JohnPaulMedina\ShortUrl\Models\ShortURLVisit;
+use JohnPaulMedina\ShortUrl\Models\ShortUrlVisit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 use Jenssegers\Agent\Agent;
@@ -12,7 +12,7 @@ use Jenssegers\Agent\Agent;
  */
 class ShortUrlVisitFactory extends Factory
 {
-    protected $model = ShortURLVisit::class;
+    protected $model = ShortUrlVisit::class;
 
     public function definition(): array
     {
