@@ -165,7 +165,7 @@ class BuildShortUrl extends Command
                 $socialObject   = $socialBuilder->destinationUrl($url)->make();
 
                 $socialUrls[] = [
-                        'social_media' = $socialMedia,
+                        'social_media' => $socialMedia,
                         'short_url' => $socialObject->default_short_url
                 ];    
             }
