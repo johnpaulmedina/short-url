@@ -48,5 +48,15 @@ class ShortUrlProvider extends ServiceProvider
         if (config('short-url') && config('short-url.validate_config')) {
             (new Validation())->validateConfig();
         }
+
+        if ($this->app->runningInConsole()) {
+           $this->commands( $this->getConsoleCommands() );
+        }
+    }
+
+    public function getConsoleCommands() {
+        return [
+            \JohnPaulMedina\Console\Commands\BuildShortUrl::class
+        ];
     }
 }
