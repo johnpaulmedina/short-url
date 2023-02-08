@@ -66,7 +66,7 @@ class BuildShortUrl extends Command
 
         }
 
-        $shortURLObject = $builder->destinationUrl($url);
+        $shortURLObject = $builder->destinationUrl(urldecode($url));
 
         if ($this->confirm('Would you like to specify a custom url key?', false)) {
             $urlKey = $this->ask('URL Key');
@@ -92,9 +92,6 @@ class BuildShortUrl extends Command
             $shortURLObject = $shortURLObject->trackVisits($trackVisits);
 
             if($trackVisits) {
-                $trackIPAddress = $this->confirm('Track IP Address?', (config('short-url.tracking.fields.ip_address') ?? false));
-                $shortURLObject = $shortURLObject->trackIPAddress($trackIPAddress);
-
                 $trackIPAddress = $this->confirm('Track IP Address?', (config('short-url.tracking.fields.ip_address') ?? false));
                 $shortURLObject = $shortURLObject->trackIPAddress($trackIPAddress);
 
