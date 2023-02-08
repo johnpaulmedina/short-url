@@ -429,7 +429,8 @@ class Builder
      */
     public function urlKey(string $key): self
     {
-        $this->urlKey = urlencode($key);
+        // $this->urlKey = urlencode($key);
+        $this->urlKey = $key;
 
         return $this;
     }

@@ -66,7 +66,7 @@ class BuildShortUrl extends Command
 
         }
 
-        $shortURLObject = $builder->destinationUrl(urldecode($url));
+        $shortURLObject = $builder->destinationUrl($url);
 
         if ($this->confirm('Would you like to specify a custom url key?', false)) {
             $urlKey = $this->ask('URL Key');
@@ -123,8 +123,8 @@ class BuildShortUrl extends Command
 
         $urls = [
             [
-                'destination' => urldecode($shortURL->default_short_url), 
-                'default_short_url' => $shortURL->destination_url,
+                'short_url' => $shortURL->default_short_url, 
+                'destination_url' => $shortURL->destination_url,
                 'single_use' => boolval($shortURL->single_use),
                 'forward_query_params' => boolval($shortURL->forward_query_params),
                 'track_visits' => boolval($shortURL->track_visits),
@@ -151,18 +151,18 @@ class BuildShortUrl extends Command
 
                 $socialUtm = [
                     'utm_source' => strtolower($socialMedia),
-                    'utm_medium' => strtolower($username),
-                    'utm_campaign' => 'social',
+                    'utm_campaign' => strtolower($username),
+                    'utm_medium' => 'click',
                 ];
 
-                $url = urldecode($shortURL->default_short_url);
+                $url = $shortURL->default_short_url;
 
                 $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($socialUtm);
 
                 $urls[] = [
                         'short_url' => $url, 
                         'destination_url' => $shortURL->destination_url,
-                        'single_use' => (boolval($shortURL->single_use) ?? 0),
+                        'single_use' => boolval($shortURL->single_use),
                         'forward_query_params' => boolval($shortURL->forward_query_params),
                         'track_visits' => boolval($shortURL->track_visits),
                         'redirect_status_code' => $shortURL->redirect_status_code,
@@ -172,10 +172,17 @@ class BuildShortUrl extends Command
         }
 
         $this->table(
-            ['ShortUrl', 'Destination', 'Single Use', 'Fwd Query Params', 'Track Visits', 'Redirect Code'],
+            [
+                'ShortUrl', 
+                'Destination', 
+                'Single Use', 
+                'Fwd Query Params', 
+                'Track Visits', 
+                'Redirect Code'
+            ],
             $urls
         );
 
-        $this->info(urldecode($shortURL->default_short_url));
+        $this->info($shortURL->default_short_url);
     }
 }
