@@ -11,7 +11,7 @@ class BuildShortUrl extends Command
      *
      * @var string
      */
-    protected $signature = 'shorturl:build {url : The destination url }';
+    protected $signature = 'shorturl:build {url : The destination url } {quick=0 : Making this option true will bypass the steps}';
 
     /**
      * The console command description.
@@ -31,91 +31,97 @@ class BuildShortUrl extends Command
 
         $url = $this->argument('url');
 
-        if ($this->confirm('Would you like to append UTM Tracking?', true)) {
-            
-            $utm = [
-                'utm_id' => null,
-                'utm_source' => null,
-                'utm_medium' => null,
-                'utm_campaign' => null,
-                'utm_term' => null,
-                'utm_content' => null
-            ];
+        if(!boolval($this->argument('quick'))) {
+            if ($this->confirm('Would you like to append UTM Tracking?', true)) {
+                
+                $utm = [
+                    'utm_id' => null,
+                    'utm_source' => null,
+                    'utm_medium' => null,
+                    'utm_campaign' => null,
+                    'utm_term' => null,
+                    'utm_content' => null
+                ];
 
-            $this->warn('You may skip any utm item by leaving them blank.');
+                $this->warn('You may skip any utm item by leaving them blank.');
 
-            $this->info('Used to identify which ads campaign this referral references. Use utm_id to identify a specific ads campaign.');
-            $utm['utm_id'] = $this->ask('UTM Campaign ID');
+                $this->info('Used to identify which ads campaign this referral references. Use utm_id to identify a specific ads campaign.');
+                $utm['utm_id'] = $this->ask('UTM Campaign ID');
 
-            $this->info('Use utm_source to identify a search engine, newsletter name, or other source.');
-            $utm['utm_source'] = $this->ask('UTM Source', 'social');
+                $this->info('Use utm_source to identify a search engine, newsletter name, or other source.');
+                $utm['utm_source'] = $this->ask('UTM Source', 'social');
 
-            $this->info('Use utm_medium to identify a medium such as email or cost-per-click.');
-            $utm['utm_medium'] = $this->ask('UTM Medium', 'click');
+                $this->info('Use utm_medium to identify a medium such as email or cost-per-click.');
+                $utm['utm_medium'] = $this->ask('UTM Medium', 'click');
 
-            $this->info('Used for keyword analysis. Use utm_campaign to identify a specific product promotion or strategic campaign.');
-            $utm['utm_campaign'] = $this->ask('UTM Campaign');
+                $this->info('Used for keyword analysis. Use utm_campaign to identify a specific product promotion or strategic campaign.');
+                $utm['utm_campaign'] = $this->ask('UTM Campaign');
 
-            $this->info('Used for paid search. Use utm_term to note the keywords for this ad.');
-            $utm['utm_term'] = $this->ask('UTM Term');
+                $this->info('Used for paid search. Use utm_term to note the keywords for this ad.');
+                $utm['utm_term'] = $this->ask('UTM Term');
 
-            $this->info('Used for paid search. Use utm_term to note the keywords for this ad.');
-            $utm['utm_content'] = $this->ask('UTM Content');            
+                $this->info('Used for paid search. Use utm_term to note the keywords for this ad.');
+                $utm['utm_content'] = $this->ask('UTM Content');            
 
-            $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($utm);
+                $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($utm);
 
-        }
+            }
+        }   
 
         $shortURLObject = $builder->destinationUrl($url);
 
-        if ($this->confirm('Would you like to specify a custom url key?', false)) {
-            $urlKey = $this->ask('URL Key');
-            if(isset($urlKey) && !is_null($urlKey) && $urlKey != "") {
-                $shortURLObject = $shortURLObject->urlKey($urlKey);
+        if(!boolval($this->argument('quick'))) {
+            if ($this->confirm('Would you like to specify a custom url key?', false)) {
+                $urlKey = $this->ask('URL Key');
+                if(isset($urlKey) && !is_null($urlKey) && $urlKey != "") {
+                    $shortURLObject = $shortURLObject->urlKey($urlKey);
+                }
             }
+
+            if ($this->confirm('Is this a one-time use forward?', false)) {
+                $shortURLObject = $shortURLObject->singleUse();
+            }
+
+            $redirectCode = $this->choice(
+                'Which redirect status code would you like to use? 301: Permanent redirect and may be cached by the browser, limiting your stats. 302: Temporary redirect, used for best tracking the exact number of visits.',
+                ['301', '302'],
+                1
+            );
+
+            $shortURLObject = $shortURLObject->redirectStatusCode($redirectCode);
         }
 
-        if ($this->confirm('Is this a one-time use forward?', false)) {
-            $shortURLObject = $shortURLObject->singleUse();
-        }
+        if(!boolval($this->argument('quick'))) {
+            if ($this->confirm('Would you like to overwrite the tracking settings?', false)) {
+                $trackVisits = $this->confirm('Track Visits?', (config('short-url.tracking.default_enabled') ?? false));
+                $shortURLObject = $shortURLObject->trackVisits($trackVisits);
 
-        $redirectCode = $this->choice(
-            'Which redirect status code would you like to use? 301: Permanent redirect and may be cached by the browser, limiting your stats. 302: Temporary redirect, used for best tracking the exact number of visits.',
-            ['301', '302'],
-            1
-        );
+                if($trackVisits) {
+                    $trackIPAddress = $this->confirm('Track IP Address?', (config('short-url.tracking.fields.ip_address') ?? false));
+                    $shortURLObject = $shortURLObject->trackIPAddress($trackIPAddress);
 
-        $shortURLObject = $shortURLObject->redirectStatusCode($redirectCode);
+                    $trackBrowser = $this->confirm('Track Browser?', (config('short-url.tracking.fields.browser') ?? false));
+                    $shortURLObject = $shortURLObject->trackBrowser($trackBrowser);
 
-        if ($this->confirm('Would you like to overwrite the tracking settings?', false)) {
-            $trackVisits = $this->confirm('Track Visits?', (config('short-url.tracking.default_enabled') ?? false));
-            $shortURLObject = $shortURLObject->trackVisits($trackVisits);
+                    $trackBrowserVersion = $this->confirm('Track Browser Version?', (config('short-url.tracking.fields.browser_version') ?? false));
+                    $shortURLObject = $shortURLObject->trackBrowserVersion($trackBrowserVersion);
 
-            if($trackVisits) {
-                $trackIPAddress = $this->confirm('Track IP Address?', (config('short-url.tracking.fields.ip_address') ?? false));
-                $shortURLObject = $shortURLObject->trackIPAddress($trackIPAddress);
+                    $trackOperatingSystem = $this->confirm('Track Operating System?', (config('short-url.tracking.fields.operating_system') ?? false));
+                    $shortURLObject = $shortURLObject->trackBrowserVersion($trackOperatingSystem);
 
-                $trackBrowser = $this->confirm('Track Browser?', (config('short-url.tracking.fields.browser') ?? false));
-                $shortURLObject = $shortURLObject->trackBrowser($trackBrowser);
+                    $trackOperatingSystemVersion = $this->confirm('Track Operating System Version?', (config('short-url.tracking.fields.operating_system_version') ?? false));
+                    $shortURLObject = $shortURLObject->trackOperatingSystemVersion($trackOperatingSystemVersion);
 
-                $trackBrowserVersion = $this->confirm('Track Browser Version?', (config('short-url.tracking.fields.browser_version') ?? false));
-                $shortURLObject = $shortURLObject->trackBrowserVersion($trackBrowserVersion);
+                    $trackRefererURL = $this->confirm('Track Referrer URL?', (config('short-url.tracking.fields.referer_url') ?? false));
+                    $shortURLObject = $shortURLObject->trackRefererURL($trackRefererURL);
 
-                $trackOperatingSystem = $this->confirm('Track Operating System?', (config('short-url.tracking.fields.operating_system') ?? false));
-                $shortURLObject = $shortURLObject->trackBrowserVersion($trackOperatingSystem);
+                    $trackDeviceType = $this->confirm('Track Device Type?', (config('short-url.tracking.fields.device_type') ?? false));
+                    $shortURLObject = $shortURLObject->trackDeviceType($trackDeviceType);
+                }            
 
-                $trackOperatingSystemVersion = $this->confirm('Track Operating System Version?', (config('short-url.tracking.fields.operating_system_version') ?? false));
-                $shortURLObject = $shortURLObject->trackOperatingSystemVersion($trackOperatingSystemVersion);
-
-                $trackRefererURL = $this->confirm('Track Referrer URL?', (config('short-url.tracking.fields.referer_url') ?? false));
-                $shortURLObject = $shortURLObject->trackRefererURL($trackRefererURL);
-
-                $trackDeviceType = $this->confirm('Track Device Type?', (config('short-url.tracking.fields.device_type') ?? false));
-                $shortURLObject = $shortURLObject->trackDeviceType($trackDeviceType);
-            }            
-
-            $forwardParams = $this->confirm('Forward query parameters?', (config('short-url.forward_query_params') ?? false));
-            $shortURLObject = $shortURLObject->forwardQueryParams($forwardParams);
+                $forwardParams = $this->confirm('Forward query parameters?', (config('short-url.forward_query_params') ?? false));
+                $shortURLObject = $shortURLObject->forwardQueryParams($forwardParams);
+            }
         }
 
         $shortURLObject = $shortURLObject->make();
@@ -132,52 +138,12 @@ class BuildShortUrl extends Command
             ]
         ];
 
-        if($this->confirm('Would you like to generate social media utm tracking urls?', true)) {
-
-            $socialUrls = [];
-
-            $socialUtm = [
-                'utm_id' => null,
-                'utm_source' => null,
-                'utm_medium' => null,
-                'utm_campaign' => null,
-                'utm_term' => null,
-                'utm_content' => null
-            ];
-
-            $socialMedias = ['Facebook','Instagram','TikTok','Twitter'];
-
-            // $username = $this->ask('What is the username or handle for this campaign?');
-
-            foreach ($socialMedias as $socialMedia) {
-
-                $socialUtm = [
-                    'utm_source' => strtolower($socialMedia),
-                    // 'utm_campaign' => strtolower($username),
-                    // 'utm_medium' => 'click',
-                ];
-
-                $url = $shortURL->default_short_url;
-
-                $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($socialUtm);
-
-                $socialBuilder  = new \JohnPaulMedina\ShortUrl\Classes\Builder();
-                $socialObject   = $socialBuilder->destinationUrl("https://{$url}")->make();
-
-                $socialUrls[] = [
-                        'social_media' => $socialMedia,
-                        'short_url' => $socialObject->default_short_url
-                ];    
+        if(!boolval($this->argument('quick'))) {
+            if($this->confirm('Would you like to generate social media utm tracking urls?', true)) {
+                $this->generateSocialMedia($shortURL);
             }
-
-            $this->table(
-                [
-                    'Social Media',
-                    'Url'
-                ],
-                $socialUrls
-            );
-
+        } else {
+            $this->generateSocialMedia($shortURL);
         }
 
         $this->table(
@@ -193,5 +159,51 @@ class BuildShortUrl extends Command
         );
 
         $this->info($shortURL->default_short_url);
+    }
+
+    public function generateSocialMedia($shortURL) {
+        $socialUrls = [];
+
+        $socialUtm = [
+            'utm_id' => null,
+            'utm_source' => null,
+            'utm_medium' => null,
+            'utm_campaign' => null,
+            'utm_term' => null,
+            'utm_content' => null
+        ];
+
+        $socialMedias = ['Facebook','Instagram','TikTok','Twitter'];
+
+        // $username = $this->ask('What is the username or handle for this campaign?');
+
+        foreach ($socialMedias as $socialMedia) {
+
+            $socialUtm = [
+                'utm_source' => strtolower($socialMedia),
+                // 'utm_campaign' => strtolower($username),
+                // 'utm_medium' => 'click',
+            ];
+
+            $url = $shortURL->default_short_url;
+
+            $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($socialUtm);
+
+            $socialBuilder  = new \JohnPaulMedina\ShortUrl\Classes\Builder();
+            $socialObject   = $socialBuilder->destinationUrl("https://{$url}")->make();
+
+            $socialUrls[] = [
+                'social_media' => $socialMedia,
+                'short_url' => $socialObject->default_short_url
+            ];    
+        }
+
+        $this->table(
+            [
+                'Social Media',
+                'Url'
+            ],
+            $socialUrls
+        );
     }
 }
