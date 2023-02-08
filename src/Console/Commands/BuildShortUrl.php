@@ -38,7 +38,7 @@ class BuildShortUrl extends Command
         // }
 
         $shortURLObject = $shortURLObject->make();
-        $shortURL = $shortURLObject->default_short_url;
+        $shortURL = $shortURLObject;
 
         $this->table(
             ['Destination', 'Short Url'],
