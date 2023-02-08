@@ -21,7 +21,7 @@ class ShortUrlController
      */
     public function __invoke(Request $request, Resolver $resolver, string $shortURLKey = '/'): RedirectResponse
     {
-        $shortURL = ShortUrl::where('url_key', urlencode($shortURLKey))->firstOrFail();
+        $shortURL = ShortUrl::where('url_key', $shortURLKey)->firstOrFail();
 
         $resolver->handleVisit(request(), $shortURL);
 
