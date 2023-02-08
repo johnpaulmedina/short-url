@@ -135,6 +135,6 @@ class BuildShortUrl extends Command
             ]
         );
 
-        $this->info($shortURL->default_short_url);
+        $this->info(urldecode($shortURL->default_short_url));
     }
 }
