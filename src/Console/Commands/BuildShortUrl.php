@@ -134,6 +134,8 @@ class BuildShortUrl extends Command
 
         if($this->confirm('Would you like to generate social media utm tracking urls?', true)) {
 
+            $socialUrls = [];
+
             $socialUtm = [
                 'utm_id' => null,
                 'utm_source' => null,
@@ -145,7 +147,7 @@ class BuildShortUrl extends Command
 
             $socialMedias = ['Facebook','Instagram','TikTok','Twitter'];
 
-            $username = $this->ask('What is the username or handle for this campaign?');
+            // $username = $this->ask('What is the username or handle for this campaign?');
 
             foreach ($socialMedias as $socialMedia) {
 
@@ -159,15 +161,17 @@ class BuildShortUrl extends Command
 
                 $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($socialUtm);
 
-                $urls[] = [
-                        'short_url' => $url, 
-                        'destination_url' => $shortURL->destination_url,
-                        'single_use' => boolval($shortURL->single_use),
-                        'forward_query_params' => boolval($shortURL->forward_query_params),
-                        'track_visits' => boolval($shortURL->track_visits),
-                        'redirect_status_code' => $shortURL->redirect_status_code,
+                $socialUrls[] = [
+                        'short_url' => $url
                 ];    
             }
+
+            $this->table(
+                [
+                    'Social Media URL'
+                ],
+                $socialUrls
+            );
 
         }
 
