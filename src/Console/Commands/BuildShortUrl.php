@@ -155,14 +155,14 @@ class BuildShortUrl extends Command
                     'utm_campaign' => 'social',
                 ];
 
-                $url = $shortURL->destination_url;
+                $url = urldecode($shortURL->default_short_url);
 
                 $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($socialUtm);
 
                 $urls[] = [
-                        'destination' => urldecode($shortURL->default_short_url), 
-                        'default_short_url' => $url,
-                        'single_use' => boolval($shortURL->single_use),
+                        'short_url' => $url, 
+                        'destination_url' => $shortURL->destination_url,
+                        'single_use' => (boolval($shortURL->single_use) ?? 0),
                         'forward_query_params' => boolval($shortURL->forward_query_params),
                         'track_visits' => boolval($shortURL->track_visits),
                         'redirect_status_code' => $shortURL->redirect_status_code,
