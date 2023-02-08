@@ -41,11 +41,15 @@ class BuildShortUrl extends Command
         $shortURL = $shortURLObject;
 
         $this->table(
-            ['Destination', 'Short Url'],
+            ['ShortUrl', 'Destination', 'Single Use', 'Fwd Query Params', 'Track Visits', 'Redirect Code'],
             [
                 [
-                    'destination' => $shortURL->destination, 
-                    'default_short_url' => $shortURL->default_short_url
+                    'destination' => $shortURL->default_short_url, 
+                    'default_short_url' => $shortURL->destination,
+                    'single_use' => $shortURL->single_use,
+                    'forward_query_params' => $shortURL->forward_query_params,
+                    'track_visits' => $shortURL->track_visits,
+                    'redirect_status_code' => $shortURL->redirect_status_code,
                 ]
             ]
         );
