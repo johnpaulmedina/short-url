@@ -121,18 +121,59 @@ class BuildShortUrl extends Command
         $shortURLObject = $shortURLObject->make();
         $shortURL = $shortURLObject;
 
+        $urls = [
+            [
+                'destination' => urldecode($shortURL->default_short_url), 
+                'default_short_url' => $shortURL->destination_url,
+                'single_use' => boolval($shortURL->single_use),
+                'forward_query_params' => boolval($shortURL->forward_query_params),
+                'track_visits' => boolval($shortURL->track_visits),
+                'redirect_status_code' => $shortURL->redirect_status_code,
+            ]
+        ];
+
+        if($this->confirm('Would you like to generate social media utm tracking urls?', true)) {
+
+            $socialUtm = [
+                'utm_id' => null,
+                'utm_source' => null,
+                'utm_medium' => null,
+                'utm_campaign' => null,
+                'utm_term' => null,
+                'utm_content' => null
+            ];
+
+            $socialMedias = ['Facebook','Instagram','TikTok','Twitter'];
+
+            foreach ($socialMedias as $socialMedia) {
+
+                $username = $this->ask("What is the username or handle for {$socialMedia}?");
+
+                $socialUtm = [
+                    'utm_source' => strtolower($socialMedia),
+                    'utm_medium' => strtolower($username),
+                    'utm_campaign' => 'social',
+                ];
+
+                $url = $shortURL->destination_url;
+
+                $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . http_build_query($socialUtm);
+
+                $urls[] = [
+                        'destination' => urldecode($shortURL->default_short_url), 
+                        'default_short_url' => $url,
+                        'single_use' => boolval($shortURL->single_use),
+                        'forward_query_params' => boolval($shortURL->forward_query_params),
+                        'track_visits' => boolval($shortURL->track_visits),
+                        'redirect_status_code' => $shortURL->redirect_status_code,
+                ];    
+            }
+
+        }
+
         $this->table(
             ['ShortUrl', 'Destination', 'Single Use', 'Fwd Query Params', 'Track Visits', 'Redirect Code'],
-            [
-                [
-                    'destination' => urldecode($shortURL->default_short_url), 
-                    'default_short_url' => $shortURL->destination_url,
-                    'single_use' => boolval($shortURL->single_use),
-                    'forward_query_params' => boolval($shortURL->forward_query_params),
-                    'track_visits' => boolval($shortURL->track_visits),
-                    'redirect_status_code' => $shortURL->redirect_status_code,
-                ]
-            ]
+            $urls
         );
 
         $this->info(urldecode($shortURL->default_short_url));
